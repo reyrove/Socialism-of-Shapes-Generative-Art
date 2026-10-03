@@ -2,1027 +2,2441 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Socialism of Shapes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Socialism of Shapes · Generative Art</title>
+  <meta name="description" content="Socialism of Shapes — a seed-based generative system of collective patterns. A catalogue of computational compositions for fashion, textile and surface design.">
   <meta name="theme-color" content="#0a0a0a">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="icon" type="image/svg+xml" href="fav.svg">
-  
+  <link rel="icon" type="image/svg+xml" href="images/fav.svg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
   <style>
-    /* --- PERFECT RESET --- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    /* ============================================================
+       SOCIALISM OF SHAPES · CATALOGUE EDITION
+    ============================================================ */
+
+    :root {
+      --bg: #0a0a0a;
+      --bg-soft: #0f0f0e;
+      --paper: #f4f1ea;
+      --paper-soft: #ebe6db;
+      --ink: #141414;
+      --ink-soft: #5a5650;
+
+      --gold: #b8935a;
+      --gold-soft: #d4b483;
+      --gold-deep: #80633b;
+
+      --line: rgba(244, 241, 234, 0.10);
+      --line-dark: rgba(20, 20, 20, 0.14);
+
+      --text: rgba(244, 241, 234, 0.88);
+      --text-dim: rgba(244, 241, 234, 0.48);
+      --text-faint: rgba(244, 241, 234, 0.22);
+
+      --serif: "Cormorant Garamond", Georgia, serif;
+      --mono: "DM Mono", ui-monospace, monospace;
+
+      --page: min(1180px, calc(100% - 64px));
     }
-    
-    html, body {
-      background: #0a0a0a;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      min-height: 100dvh;
-      overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', Roboto, Arial, sans-serif;
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.6;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      touch-action: none;
-      -webkit-tap-highlight-color: transparent;
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      height: 100dvh;
-    }
-    
-    /* --- MAIN CONTAINER --- */
-    #main-container {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 100%;
-      height: 100dvh;
-      padding: 20px;
-      gap: 8px;
-    }
-    
-    /* --- TITLE (CENTER TOP) --- */
-    .title-bar {
-      text-align: center;
-      flex-shrink: 0;
-      padding: 2px 0;
+      overflow-x: hidden;
       width: 100%;
     }
-    .title-bar .title {
-      font-size: 22px;
-      font-weight: 300;
-      letter-spacing: 8px;
-      color: rgba(255,255,255,0.85);
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    img, canvas { display: block; max-width: 100%; height: auto; }
+
+    ::selection { background: var(--gold); color: var(--bg); }
+
+    .page {
+      width: var(--page);
+      margin: 0 auto;
+      max-width: 100%;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      color: var(--gold-soft);
+      font-size: 10px;
+      letter-spacing: 0.24em;
       text-transform: uppercase;
     }
-    .title-bar .title .accent {
-      color: #c9a84c;
-      font-weight: 400;
+
+    .section {
+      padding: 140px 0;
+      border-top: 1px solid var(--line);
     }
-    
-    /* --- CANVAS CONTAINER --- */
-    #canvas-container {
-      flex: 1;
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 40px;
+      margin-bottom: 80px;
+      align-items: baseline;
+    }
+
+    .section-number {
+      color: var(--text-faint);
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2.6rem, 5.4vw, 4.8rem);
+      font-weight: 300;
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+      color: var(--paper);
+    }
+
+    .section-title em { font-style: italic; color: var(--gold-soft); }
+
+    /* RIBBON */
+    .ribbon {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 20px;
+      padding: 18px 32px;
+      background: rgba(10, 10, 10, 0.72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+
+    .ribbon-brand {
+      font-family: var(--serif);
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      color: var(--paper);
+      flex-shrink: 0;
+    }
+    .ribbon-brand em { color: var(--gold-soft); font-style: italic; }
+
+    .ribbon-nav {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      min-height: 0;
-      padding: 0 10px;
+      gap: 28px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+      flex-shrink: 1;
+      min-width: 0;
+    }
+    .ribbon-nav::-webkit-scrollbar { display: none; }
+
+    .ribbon-nav a {
+      transition: color 300ms ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .ribbon-nav a:hover { color: var(--gold-soft); }
+
+    @media (max-width: 720px) {
+      .ribbon { padding: 12px 16px; gap: 14px; }
+      .ribbon-brand { font-size: 15px; }
+      .ribbon-nav {
+        gap: 18px;
+        font-size: 9px;
+        mask-image: linear-gradient(to right, black 0, black calc(100% - 20px), transparent 100%);
+        -webkit-mask-image: linear-gradient(to right, black 0, black calc(100% - 20px), transparent 100%);
+      }
+    }
+
+    /* COVER */
+    .cover {
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 120px 0 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 60px;
+    }
+
+    .cover-meta {
+      display: flex; justify-content: space-between; align-items: baseline;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--text-faint);
+    }
+    .cover-meta .vol { color: var(--gold-soft); }
+
+    .cover-body {
+      display: grid; grid-template-columns: 1fr; gap: 50px;
+      align-items: center; flex: 1;
+    }
+
+    @media (min-width: 900px) {
+      .cover-body { grid-template-columns: 1.1fr 0.9fr; gap: 80px; }
+    }
+
+    .cover-text { display: flex; flex-direction: column; gap: 32px; }
+
+    .cover-title {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: clamp(2.6rem, 6.4vw, 6rem);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--paper);
+    }
+    .cover-title em { font-style: italic; color: var(--gold-soft); display: block; }
+
+    .cover-sub {
+      font-family: var(--serif);
+      font-size: clamp(1.3rem, 1.9vw, 1.7rem);
+      font-weight: 300; font-style: italic;
+      line-height: 1.4;
+      color: var(--text-dim);
+      max-width: 500px;
+    }
+
+    .cover-desc {
+      color: var(--text-dim);
+      font-size: 13px;
+      line-height: 1.8;
+      max-width: 460px;
+    }
+
+    .cover-art {
       position: relative;
-    }
-    
-    #canvas-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 100%;
-      box-shadow: 0 0 80px rgba(0,0,0,0.9);
-      border-radius: 2px;
+      aspect-ratio: 1;
+      background: #000;
+      border: 1px solid var(--line);
       overflow: hidden;
+      max-width: 520px;
+      margin-left: auto;
+      width: 100%;
+    }
+
+    #coverCanvas { width: 100%; height: 100%; display: block; }
+
+    .cover-foot {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;
+      padding-top: 32px;
+      border-top: 1px solid var(--line);
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--text-faint);
+    }
+    .cover-foot .k { display: block; color: var(--gold-soft); margin-bottom: 8px; }
+    .cover-foot .v { color: var(--text-dim); letter-spacing: 0.1em; line-height: 1.7; }
+
+    @media (max-width: 720px) {
+      .cover { padding: 100px 0 40px; gap: 40px; }
+      .cover-title { font-size: clamp(2.2rem, 12vw, 4rem); }
+      .cover-art { margin: 0 auto; }
+      .cover-foot { grid-template-columns: 1fr; gap: 20px; }
+    }
+
+    /* STATEMENT */
+    .statement {
+      background: var(--bg-soft);
+      border-top: 1px solid var(--line);
+      padding: 140px 0;
+    }
+
+    .statement-inner {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    .statement-label {
+      position: sticky;
+      top: 100px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--gold-soft);
+    }
+
+    .statement-label .num {
+      display: block;
+      color: var(--text-faint);
+      margin-bottom: 8px;
+    }
+
+    .statement-body {
+      max-width: 720px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .statement-lead {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 3vw, 2.6rem);
+      font-weight: 300;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: var(--paper);
+    }
+
+    .statement-lead em {
+      font-style: italic;
+      color: var(--gold-soft);
+    }
+
+    .statement-body p {
+      color: var(--text-dim);
+      font-size: 13.5px;
+      line-height: 1.9;
+      max-width: 62ch;
+    }
+
+    .statement-body p strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .statement-ai {
+      margin-top: 24px;
+      padding: 22px 26px;
+      border-left: 2px solid var(--gold);
+      background: rgba(184, 147, 90, 0.04);
+      color: var(--text-dim);
+      font-size: 12.5px;
+      line-height: 1.8;
+      font-style: italic;
+    }
+
+    .statement-ai strong {
+      color: var(--gold-soft);
+      font-style: normal;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    @media (max-width: 900px) {
+      .statement { padding: 90px 0; }
+      .statement-inner { grid-template-columns: 1fr; gap: 28px; }
+      .statement-label { position: static; }
+    }
+
+    @media (max-width: 720px) {
+      .statement { padding: 72px 0; }
+      .statement-ai { padding: 18px 20px; font-size: 12px; }
+    }
+
+    /* WORK */
+    .work-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.75fr);
+      gap: 80px;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .work-layout { grid-template-columns: 1fr; gap: 56px; }
+    }
+
+    .art-stage {
       position: relative;
-      background: #0a0a0a;
+      background: #000;
+      border: 1px solid var(--line);
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
     }
-    
-    #canvas-wrapper canvas {
-      display: block !important;
-      max-width: 100%;
-      max-height: 100%;
-      width: auto !important;
-      height: auto !important;
-      object-fit: contain;
-      border-radius: 2px;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1;
-    }
-    
-    /* --- SHIRT MOCKUP --- */
-    #shirt-mockup {
-      display: none;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+
+    .art-stage canvas {
       max-width: 100%;
       max-height: 100%;
       width: auto;
       height: auto;
       object-fit: contain;
-      border-radius: 2px;
-      box-shadow: 0 0 80px rgba(0,0,0,0.9);
-      z-index: 2;
+      display: block;
     }
-    #shirt-mockup.active {
-      display: block !important;
-      animation: fadeIn 0.6s ease;
+
+    @media (max-width: 720px) {
+      .art-stage { padding: 16px; }
     }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
-      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+    .work-info { display: flex; flex-direction: column; gap: 32px; }
+
+    .work-index {
+      color: var(--gold-soft);
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
     }
-    
-    /* --- BOTTOM BAR --- */
-    .bottom-bar {
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      gap: 6px;
-      padding: 4px 0;
+
+    .work-title {
+      font-family: var(--serif);
+      font-size: clamp(2.4rem, 3.6vw, 3.6rem);
+      font-weight: 300;
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+      color: var(--paper);
     }
-    
-    /* --- CONTROLS --- */
-    .controls-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
+    .work-title em { display: block; font-style: italic; color: var(--gold-soft); }
+
+    .work-description {
+      color: var(--text-dim);
+      font-size: 12.5px;
+      line-height: 1.8;
+      max-width: 40ch;
     }
-    
-    .controls {
-      color: rgba(255,255,255,0.7);
-      background: rgba(255,255,255,0.04);
-      padding: 8px 20px;
-      border-radius: 30px;
-      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', Roboto, Arial, sans-serif;
-      font-size: 11px;
+
+    .metadata { border-top: 1px solid var(--line); }
+
+    .meta-row {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 20px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: baseline;
+    }
+
+    .meta-label {
+      color: var(--text-faint);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .meta-value {
+      color: var(--paper);
+      font-family: var(--serif);
+      font-size: 16px;
       font-weight: 400;
-      border: 1px solid rgba(255,255,255,0.08);
-      text-align: center;
+      text-align: right;
+    }
+
+    .controls { display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .btn {
+      appearance: none;
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--text-dim);
+      min-height: 46px;
+      padding: 0 24px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
       cursor: pointer;
-      user-select: none;
-      -webkit-user-select: none;
-      transition: all 0.3s ease;
-      letter-spacing: 0.8px;
-      touch-action: manipulation;
-      min-height: 36px;
+      transition: color 300ms ease, border-color 300ms ease, background 300ms ease;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
     }
-    .controls:hover {
-      color: rgba(255,255,255,0.95);
-      border-color: rgba(255,255,255,0.2);
-      background: rgba(255,255,255,0.08);
+    .btn:hover { color: var(--paper); border-color: var(--gold); }
+    .btn.primary { color: var(--gold-soft); border-color: var(--gold); }
+    .btn.primary:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+
+    @media (max-width: 720px) {
+      .controls { width: 100%; }
+      .btn { flex: 1; padding: 0 16px; }
     }
-    .controls:active {
-      transform: scale(0.95);
+
+    /* APPLICATION */
+    .application {
+      background: var(--paper);
+      color: var(--ink);
+      border-top: 0;
+      padding: 140px 0;
     }
-    .controls .key {
-      color: rgba(255,255,255,0.5);
+
+    .application .section-number { color: rgba(20, 20, 20, 0.4); }
+    .application .section-title { color: var(--ink); }
+    .application .section-title em { color: var(--gold-deep); }
+
+    .application-intro {
+      max-width: 640px;
+      margin: 0 0 80px auto;
+      font-family: var(--serif);
+      font-size: clamp(1.5rem, 2.4vw, 2.2rem);
       font-weight: 300;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: var(--ink);
     }
-    .controls .sep {
-      color: rgba(255,255,255,0.15);
-      margin: 0 4px;
-    }
-    
-    /* --- SHIRT BUTTON --- */
-    .controls.shirt-btn {
-      border-color: rgba(201, 168, 76, 0.2);
-      color: rgba(201, 168, 76, 0.7);
-      letter-spacing: 1px;
-    }
-    .controls.shirt-btn:hover {
-      border-color: rgba(201, 168, 76, 0.4);
-      color: #c9a84c;
-      background: rgba(201, 168, 76, 0.06);
-    }
-    .controls.shirt-btn.active {
-      border-color: rgba(201, 168, 76, 0.5);
-      color: #c9a84c;
-      background: rgba(201, 168, 76, 0.08);
-    }
-    .controls.shirt-btn .icon {
-      font-size: 14px;
-      line-height: 1;
-    }
-    
-    /* --- INFO ROW --- */
-    .info-row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 14px;
-      color: rgba(255,255,255,0.3);
-      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
-      font-size: 9px;
-      letter-spacing: 0.5px;
-      flex-wrap: wrap;
-      padding: 2px 0;
-    }
-    .info-row .info-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 3px 12px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.04);
-      background: rgba(255,255,255,0.02);
-    }
-    .info-row .label {
-      color: rgba(255,255,255,0.25);
-      font-weight: 300;
-    }
-    .info-row .value {
-      color: rgba(255,255,255,0.6);
-      font-weight: 400;
-    }
-    
-    /* --- DESCRIPTION --- */
-    .description {
-      display: block;
-      text-align: center;
-      color: rgba(255,255,255,0.25);
-      font-size: 8px;
-      letter-spacing: 1.2px;
-      line-height: 1.8;
-      padding: 2px 10px;
-      font-weight: 300;
-      max-width: 500px;
+    .application-intro span { color: var(--ink-soft); font-style: italic; }
+
+    .framed-plate {
+      position: relative;
       width: 100%;
+      padding: 80px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--paper-soft);
+      border: 1px solid var(--line-dark);
+    }
+
+    .framed-plate::before {
+      content: "PLATE 001 / ARCHIVAL PRINT";
+      position: absolute;
+      top: 24px;
+      left: 28px;
+      color: rgba(20, 20, 20, 0.42);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
     }
-    .description .highlight {
-      color: rgba(255,255,255,0.4);
+
+    .framed-plate::after {
+      content: "SHAPES × REYROVE";
+      position: absolute;
+      right: 28px;
+      bottom: 24px;
+      color: rgba(20, 20, 20, 0.42);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
     }
-    .description .sep {
-      color: rgba(255,255,255,0.08);
-      margin: 0 4px;
+
+    .frame-inner {
+      position: relative;
+      padding: 28px;
+      background: var(--paper);
+      box-shadow:
+        0 1px 0 rgba(20,20,20,0.06),
+        0 20px 60px rgba(20,20,20,0.14),
+        0 4px 14px rgba(20,20,20,0.08);
+      max-width: 560px;
+      width: 100%;
     }
-    
-    /* ============================================
-       RESPONSIVE
-    ============================================ */
-    
-    @media (max-width: 1024px) {
-      #main-container { padding: 16px; gap: 6px; }
-      .title-bar .title { font-size: 20px; letter-spacing: 6px; }
-      .controls { font-size: 10px; padding: 7px 16px; min-height: 34px; }
-      .info-row { font-size: 8.5px; gap: 12px; }
-      .info-row .info-item { padding: 2px 10px; }
-      .description { font-size: 7.5px; letter-spacing: 1px; }
+
+    .frame-inner::before {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border: 1px solid rgba(20, 20, 20, 0.18);
+      pointer-events: none;
     }
-    
-    @media (max-width: 768px) {
-      #main-container { padding: 12px; gap: 5px; }
-      .title-bar .title { font-size: 17px; letter-spacing: 5px; }
-      #canvas-container { padding: 0 6px; }
-      .controls { font-size: 9px; padding: 6px 14px; min-height: 32px; letter-spacing: 0.6px; }
-      .controls-row { gap: 6px; }
-      .info-row { font-size: 8px; gap: 10px; }
-      .info-row .info-item { padding: 2px 8px; }
-      .description { font-size: 7px; letter-spacing: 0.8px; padding: 2px 6px; }
-      .controls.shirt-btn .icon { font-size: 12px; }
+
+    .frame-inner canvas {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1;
+      background: #000;
     }
-    
-    @media (max-width: 480px) {
-      #main-container { padding: 8px; gap: 4px; }
-      .title-bar .title { font-size: 14px; letter-spacing: 4px; }
-      #canvas-container { padding: 0 4px; }
-      .controls { font-size: 8px; padding: 5px 12px; min-height: 28px; border-radius: 24px; letter-spacing: 0.4px; }
-      .controls-row { gap: 4px; }
-      .info-row { font-size: 7px; gap: 8px; }
-      .info-row .info-item { padding: 2px 6px; gap: 4px; }
-      .description { font-size: 6.5px; letter-spacing: 0.6px; padding: 2px 4px; line-height: 1.6; }
-      .controls.shirt-btn .icon { font-size: 11px; }
+
+    .frame-caption {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 20px;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(20, 20, 20, 0.5);
     }
-    
+    .frame-caption .id { color: var(--gold-deep); }
+
+    .surface-head {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      margin-top: 100px;
+      margin-bottom: 48px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line-dark);
+      align-items: baseline;
+    }
+
+    .surface-head h3 {
+      font-family: var(--serif);
+      font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+      font-weight: 300;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    .surface-head h3 em { font-style: italic; color: var(--gold-deep); }
+
+    .surface-head p {
+      max-width: 44ch;
+      color: var(--ink-soft);
+      font-size: 12.5px;
+      line-height: 1.75;
+    }
+
+    .surface-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--line-dark);
+      border: 1px solid var(--line-dark);
+    }
+
+    .surface-item {
+      background: var(--paper);
+      padding: 28px 24px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .surface-item .surface-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(20, 20, 20, 0.5);
+    }
+    .surface-item .surface-label .num { color: var(--gold-deep); }
+
+    .surface-item .surface-canvas-wrap {
+      width: 100%;
+      background: #000;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .surface-item canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .surface-item .surface-title {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--ink);
+    }
+
+    .surface-item .surface-meta {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(20, 20, 20, 0.45);
+    }
+
+    @media (max-width: 1000px) {
+      .surface-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 720px) {
+      .application { padding: 72px 0; }
+      .application-intro { margin-left: 0; margin-bottom: 48px; }
+      .framed-plate { padding: 32px 12px; }
+      .framed-plate::before { top: 14px; left: 16px; font-size: 8px; }
+      .framed-plate::after { right: 16px; bottom: 14px; font-size: 8px; }
+      .frame-inner { padding: 14px; }
+      .frame-caption { font-size: 8px; gap: 10px; flex-wrap: wrap; }
+      .surface-head { grid-template-columns: 1fr; gap: 16px; margin-top: 56px; }
+      .surface-grid { grid-template-columns: 1fr; }
+    }
+
+    /* PROCESS */
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .process-card {
+      min-height: 340px;
+      padding: 44px 40px;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .process-number {
+      color: var(--gold);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .process-card h3 {
+      margin: auto 0 20px;
+      font-family: var(--serif);
+      font-size: 2.2rem;
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--paper);
+    }
+
+    .process-card p {
+      max-width: 300px;
+      color: var(--text-dim);
+      font-size: 12.5px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 900px) {
+      .process-grid { grid-template-columns: 1fr; }
+      .process-card { min-height: auto; padding: 36px 32px; }
+      .process-card h3 { margin-top: 32px; }
+    }
+
+    @media (max-width: 720px) {
+      .process-card { padding: 28px 24px; }
+    }
+
+    /* ARCHIVE */
+    .archive-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .archive-item {
+      background: var(--bg);
+      aspect-ratio: 1;
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      transition: opacity 300ms ease;
+    }
+
+    .archive-item canvas { width: 100%; height: 100%; display: block; }
+
+    .archive-item::after {
+      content: attr(data-seed);
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      color: rgba(244, 241, 234, 0.4);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      transition: color 300ms ease;
+    }
+
+    .archive-item:hover::after { color: var(--gold-soft); }
+
+    .archive-note {
+      margin-top: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 24px;
+      flex-wrap: wrap;
+      color: var(--text-faint);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .archive-note .hint { color: var(--gold-soft); }
+
+    @media (max-width: 900px) {
+      .archive-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* COMMISSION */
+    .commission {
+      background: var(--bg-soft);
+      padding: 140px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .commission-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 100px;
+      align-items: center;
+    }
+
+    .commission-title {
+      margin-top: 26px;
+      font-family: var(--serif);
+      font-size: clamp(3rem, 5.6vw, 5.6rem);
+      font-weight: 300;
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+      color: var(--paper);
+    }
+    .commission-title em { font-style: italic; color: var(--gold-soft); }
+
+    .commission-copy {
+      max-width: 440px;
+      color: var(--text-dim);
+      font-size: 12.5px;
+      line-height: 1.85;
+      margin-bottom: 44px;
+    }
+
+    .service-list {
+      border-top: 1px solid var(--line);
+      margin-bottom: 48px;
+    }
+
+    .service-item {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 20px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: baseline;
+    }
+
+    .service-item .num { color: var(--gold); font-size: 10px; letter-spacing: 0.22em; }
+    .service-item .title {
+      display: block;
+      color: var(--paper);
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 400;
+      margin-bottom: 4px;
+    }
+    .service-item .desc {
+      color: var(--text-dim);
+      font-size: 12px;
+      line-height: 1.7;
+      max-width: 40ch;
+    }
+
+    .contact-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 54px;
+      padding: 0 32px;
+      background: var(--gold);
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      transition: background 300ms ease;
+    }
+    .contact-cta:hover { background: var(--gold-soft); }
+
+    @media (max-width: 900px) {
+      .commission { padding: 90px 0; }
+      .commission-layout { grid-template-columns: 1fr; gap: 60px; }
+    }
+
+    @media (max-width: 720px) {
+      .commission { padding: 72px 0; }
+      .commission-layout { gap: 48px; }
+      .contact-cta { width: 100%; }
+    }
+
+    /* MOCKUP GALLERY */
+    .mockup-gallery {
+      margin-top: 120px;
+      padding-top: 80px;
+      border-top: 1px solid var(--line);
+    }
+
+    .mockup-head {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 40px;
+      margin-bottom: 60px;
+      align-items: baseline;
+    }
+
+    .mockup-title {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 3.4vw, 3.2rem);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--paper);
+    }
+
+    .mockup-title em {
+      font-style: italic;
+      color: var(--gold-soft);
+    }
+
+    .mockup-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .mockup-item {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .mockup-frame {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      background: #000;
+      border: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    .mockup-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 800ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .mockup-item:hover .mockup-frame img {
+      transform: scale(1.04);
+    }
+
+    .mockup-item figcaption {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+      padding-top: 4px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .mockup-id { color: var(--paper); }
+    .mockup-seed { color: var(--gold-soft); }
+
+    .mockup-note {
+      margin-top: 48px;
+      max-width: 56ch;
+      color: var(--text-dim);
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+      .mockup-gallery { margin-top: 80px; padding-top: 56px; }
+      .mockup-head { grid-template-columns: 1fr; gap: 16px; margin-bottom: 40px; }
+      .mockup-grid { grid-template-columns: 1fr; gap: 24px; }
+    }
+
+    /* COLOPHON */
+    .colophon {
+      padding: 80px 0 60px;
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr;
+      gap: 40px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+
+    .colophon .col-mark {
+      display: block;
+      font-family: var(--serif);
+      font-size: 22px;
+      font-style: italic;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--paper);
+      margin-bottom: 12px;
+    }
+    .colophon .col-mark em { color: var(--gold-soft); }
+
+    .colophon .col p {
+      color: var(--text-dim);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: none;
+      line-height: 1.8;
+      max-width: 30ch;
+    }
+
+    .colophon .col-title {
+      display: block;
+      color: var(--gold-soft);
+      margin-bottom: 16px;
+    }
+
+    .colophon .col a {
+      display: block;
+      color: var(--text-dim);
+      line-height: 2.1;
+      transition: color 300ms ease;
+      letter-spacing: 0.14em;
+      word-break: break-word;
+    }
+    .colophon .col a:hover { color: var(--gold-soft); }
+
+    .colophon-end {
+      grid-column: 1 / -1;
+      border-top: 1px solid var(--line);
+      padding-top: 32px;
+      margin-top: 32px;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      color: var(--text-faint);
+    }
+
+    .colophon-end .mark {
+      color: var(--gold-soft);
+      font-family: var(--serif);
+      font-size: 14px;
+      font-style: italic;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    @media (max-width: 900px) {
+      .colophon { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .colophon { grid-template-columns: 1fr 1fr; gap: 24px; }
+    }
+
     @media (max-width: 380px) {
-      #main-container { padding: 6px; gap: 3px; }
-      .title-bar .title { font-size: 12px; letter-spacing: 3px; }
-      #canvas-container { padding: 0 2px; }
-      .controls { font-size: 7px; padding: 4px 10px; min-height: 26px; border-radius: 20px; }
-      .info-row { font-size: 6.5px; gap: 6px; }
-      .info-row .info-item { padding: 1px 5px; border-radius: 14px; }
-      .description { font-size: 6px; letter-spacing: 0.5px; padding: 1px 3px; }
-      .controls.shirt-btn .icon { font-size: 10px; }
+      .colophon { grid-template-columns: 1fr; gap: 28px; }
     }
-    
-    @media (orientation: landscape) and (max-height: 500px) {
-      #main-container { padding: 10px 20px; gap: 4px; flex-direction: row; flex-wrap: wrap; }
-      .title-bar { width: 100%; flex-shrink: 0; }
-      .title-bar .title { font-size: 16px; letter-spacing: 4px; }
-      #canvas-container { flex: 1; min-height: 0; height: 100%; padding: 0 8px; }
-      .bottom-bar { width: auto; max-width: 180px; flex-shrink: 0; gap: 4px; padding: 0 4px; }
-      .controls { font-size: 8px; padding: 5px 12px; min-height: 28px; letter-spacing: 0.4px; }
-      .controls-row { flex-direction: column; gap: 4px; }
-      .info-row { font-size: 7px; gap: 6px; flex-direction: column; align-items: stretch; }
-      .info-row .info-item { padding: 2px 8px; justify-content: center; }
-      .description { font-size: 6px; max-width: 160px; padding: 1px 4px; line-height: 1.4; letter-spacing: 0.5px; }
+
+    /* LEGAL MODAL */
+    .legal-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
     }
-    
-    @media (orientation: landscape) and (max-height: 380px) {
-      #main-container { padding: 6px 12px; gap: 3px; }
-      .title-bar .title { font-size: 13px; letter-spacing: 3px; }
-      #canvas-container { padding: 0 4px; }
-      .bottom-bar { max-width: 140px; gap: 3px; }
-      .controls { font-size: 7px; padding: 4px 10px; min-height: 24px; border-radius: 16px; }
-      .info-row { font-size: 6px; gap: 4px; }
-      .info-row .info-item { padding: 1px 6px; }
-      .description { font-size: 5.5px; max-width: 120px; padding: 1px 3px; }
+    .legal-modal.open { display: flex; }
+
+    .legal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(10, 10, 10, 0.78);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      animation: legalFade 280ms ease;
     }
-    
-    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-      #canvas-wrapper canvas { image-rendering: auto; }
+
+    .legal-dialog {
+      position: relative;
+      width: min(560px, 100%);
+      max-height: 82vh;
+      overflow-y: auto;
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      padding: 48px 44px 32px;
+      animation: legalRise 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
     }
-    
-    @supports (-webkit-touch-callout: none) {
-      .controls { min-height: 40px; }
+
+    .legal-close {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      background: transparent;
+      border: 0;
+      color: var(--text-faint);
+      font-size: 26px;
+      line-height: 1;
+      cursor: pointer;
+      transition: color 300ms ease;
     }
-    
+    .legal-close:hover { color: var(--gold-soft); }
+
+    .legal-eyebrow {
+      display: inline-block;
+      color: var(--gold-soft);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .legal-title {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-weight: 300;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--paper);
+      margin-bottom: 24px;
+    }
+
+    .legal-body {
+      color: var(--text-dim);
+      font-family: var(--mono);
+      font-size: 12.5px;
+      line-height: 1.9;
+    }
+    .legal-body p { margin-bottom: 14px; }
+    .legal-body p:last-child { margin-bottom: 0; }
+    .legal-body strong { color: var(--text); font-weight: 500; }
+
+    .legal-foot {
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+    .legal-foot a { color: var(--gold-soft); word-break: break-all; }
+
+    @keyframes legalFade { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes legalRise {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 560px) {
+      .legal-dialog { padding: 40px 24px 24px; }
+    }
+
+    /* GLOBAL MOBILE */
+    @media (max-width: 720px) {
+      :root { --page: min(1180px, calc(100% - 32px)); }
+      .section { padding: 72px 0; }
+      .section-head { grid-template-columns: 1fr; gap: 12px; margin-bottom: 48px; }
+      .section-title { font-size: clamp(2rem, 8vw, 3rem); }
+    }
+
+    @media (max-width: 400px) {
+      :root { --page: min(1180px, calc(100% - 24px)); }
+    }
+
     @media (prefers-reduced-motion: reduce) {
-      .controls, #canvas-wrapper canvas, #shirt-mockup { transition: none; }
-      #shirt-mockup.active { animation: none; }
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+      }
     }
   </style>
 </head>
 <body>
 
-<!-- MAIN CONTAINER -->
-<div id="main-container">
+<!-- RIBBON -->
+<nav class="ribbon">
+  <span class="ribbon-brand">Socialism <em>of Shapes</em></span>
+  <div class="ribbon-nav">
+    <a href="#statement">Statement</a>
+    <a href="#work">Plate</a>
+    <a href="#application">Surfaces</a>
+    <a href="#archive">Archive</a>
+    <a href="#commission">Commission</a>
+  </div>
+</nav>
 
-  <!-- TITLE (CENTER TOP) -->
-  <div class="title-bar">
-    <div class="title"><span class="accent">Socialism</span> of Shapes</div>
+<!-- COVER -->
+<header class="cover page">
+
+  <div class="cover-meta">
+    <span class="vol">Socialism of Shapes — Catalogue</span>
+    <span>Collective Shape System</span>
   </div>
 
-  <!-- CANVAS CONTAINER -->
-  <div id="canvas-container">
-    <div id="canvas-wrapper">
-      <img id="shirt-mockup" src="Socialism-of-Shapes.jpg" alt="Socialism of Shapes on T-Shirt" />
-    </div>
-  </div>
+  <div class="cover-body">
 
-  <!-- BOTTOM BAR -->
-  <div class="bottom-bar">
+    <div class="cover-text">
+      <span class="eyebrow">A study in collective patterns</span>
 
-    <!-- CONTROLS ROW -->
-    <div class="controls-row">
-      <div class="controls" id="controlsBar">
-        <span class="key">●</span> regenerate <span class="sep">—</span> <span class="key">S</span> save
-      </div>
-      <div class="controls shirt-btn" id="shirtToggle">
-        <span class="icon">◷</span> apparel
-      </div>
-    </div>
+      <h1 class="cover-title">
+        Socialism
+        <em>of Shapes</em>
+      </h1>
 
-    <!-- INFO ROW -->
-    <div class="info-row">
-      <div class="info-item">
-        <span class="label">background</span>
-        <span class="value" id="bgDisplay">---</span>
-      </div>
-      <div class="info-item">
-        <span class="label">shadow</span>
-        <span class="value" id="shadowDisplay">---</span>
-      </div>
-      <div class="info-item">
-        <span class="label">shapes</span>
-        <span class="value" id="shapesDisplay">---</span>
-      </div>
+      <p class="cover-sub">
+        A field of shapes — each one placed with its neighbours,
+        each one responding to the same rules, together forming
+        a mesh of individual voices.
+      </p>
+
+      <p class="cover-desc">
+        For fashion houses, textile studios and surface designers.
+        Each composition is generated from a numeric seed and
+        can be licensed, adapted or commissioned to your brief.
+      </p>
     </div>
 
-    <!-- DESCRIPTION -->
-    <div class="description">
-      <span class="highlight">socialism of shapes</span>
-      <span class="sep">·</span>
-      <span class="highlight">16 shape modes</span>
-      <span class="sep">·</span>
-      <span class="highlight">generative art</span>
-      <span class="sep">·</span>
-      <span class="highlight">collective patterns</span>
+    <div class="cover-art">
+      <canvas id="coverCanvas"></canvas>
     </div>
 
   </div>
 
+  <div class="cover-foot">
+    <div>
+      <span class="k">Issue</span>
+      <span class="v">Socialism of Shapes — Autumn 2026</span>
+    </div>
+    <div>
+      <span class="k">Discipline</span>
+      <span class="v">Generative Composition</span>
+    </div>
+    <div>
+      <span class="k">Edition</span>
+      <span class="v">Seed-based · Open series</span>
+    </div>
+  </div>
+
+</header>
+
+<!-- STATEMENT -->
+<section class="statement" id="statement">
+
+  <div class="page">
+    <div class="statement-inner">
+
+      <div class="statement-label">
+        <span class="num">00 / Statement</span>
+        Artist Statement
+      </div>
+
+      <div class="statement-body">
+
+        <p class="statement-lead">
+          Every shape is the same shape — and yet no two are
+          <em>quite alike.</em>
+        </p>
+
+        <p>
+          I am an Iranian-born artist working at the intersection of
+          classical textile logic and generative systems. My work
+          begins with a simple observation: the woven surface —
+          repetitive, mathematically structured, infinitely variable —
+          has always been a form of computation, long before computers.
+        </p>
+
+        <p>
+          <strong>Socialism of Shapes</strong> places a single mode
+          of shape across a grid — triangles, squares, rectangles,
+          arcs, mixed — and then gives every cell its own expression.
+          Each shape is drawn at its own angle, its own size, its own
+          colour, its own weight. No two are identical, yet all share
+          the same underlying rule.
+        </p>
+
+        <p>
+          The result is a <em>collective</em> composition: repetitive
+          without being mechanical, uniform without losing voice.
+          Sixteen shape modes guide the field; twenty-two pastel
+          grounds and forty-five foreground palettes give it
+          colour. Each piece is defined by a numeric seed and can be
+          regenerated, documented, and adapted for textile, print,
+          and surface applications.
+        </p>
+
+        <div class="statement-ai">
+          <strong>On AI tools —</strong> where I encountered technical
+          obstacles, I turned to AI tools for debugging and code
+          optimization. Every structural, aesthetic, and conceptual
+          decision remained my own.
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<!-- PLATE -->
+<section class="section page" id="work">
+
+  <div class="section-head">
+    <span class="section-number">01 / Plate</span>
+    <h2 class="section-title">
+      Collected,<br />
+      not just <em>drawn.</em>
+    </h2>
+  </div>
+
+  <div class="work-layout">
+
+    <div class="art-stage" id="canvas-container">
+      <canvas id="target"></canvas>
+    </div>
+
+    <aside class="work-info">
+
+      <span class="work-index">Socialism of Shapes · Catalogue Entry 001</span>
+
+      <h3 class="work-title">
+        Collective
+        <em>Shape System</em>
+      </h3>
+
+      <p class="work-description">
+        A collective-shape system — every cell in a seeded grid is
+        filled with the same mode of shape, drawn at its own angle,
+        size, colour, and weight. Each composition is generated
+        from a seed, allowing the field to vary while its structural
+        identity remains fixed.
+      </p>
+
+      <div class="metadata">
+        <div class="meta-row">
+          <span class="meta-label">Seed</span>
+          <span class="meta-value" id="seedDisplay">—</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Background</span>
+          <span class="meta-value" id="bgDisplay">—</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Shadow</span>
+          <span class="meta-value" id="shadowDisplay">—</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Shape</span>
+          <span class="meta-value" id="shapesDisplay">—</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Output</span>
+          <span class="meta-value">PNG · Screen-res · Web</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Edition</span>
+          <span class="meta-value">Open Series</span>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn primary" id="controlsBar" type="button">New Seed</button>
+        <button class="btn" id="saveBtn" type="button">Download</button>
+      </div>
+
+    </aside>
+
+  </div>
+
+</section>
+
+<!-- APPLICATION -->
+<section class="application" id="application">
+
+  <div class="page">
+
+    <div class="section-head">
+      <span class="section-number">02 / Surfaces</span>
+      <h2 class="section-title">
+        One pattern.<br />
+        <em>Many surfaces.</em>
+      </h2>
+    </div>
+
+    <p class="application-intro">
+      The same seed, presented as an archival print —
+      <span>and applied across fabric, scarf, textile and wall surfaces
+      without loss of structure.</span>
+    </p>
+
+    <div class="framed-plate">
+      <div class="frame-inner">
+        <canvas id="frameCanvas"></canvas>
+        <div class="frame-caption">
+          <span class="id">Plate 001</span>
+          <span>Archival print · 1 : 1 · Open edition</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="surface-head">
+      <h3>
+        Applied across <em>surfaces.</em>
+      </h3>
+      <p>
+        Every surface below is drawn from the same numeric seed —
+        its repeat, orientation and scale adapted to the material,
+        while the underlying structural logic remains identical.
+      </p>
+    </div>
+
+    <div class="surface-grid">
+
+      <div class="surface-item">
+        <div class="surface-label">
+          <span class="num">i</span>
+          <span>Print</span>
+        </div>
+        <div class="surface-canvas-wrap" style="aspect-ratio: 1;">
+          <canvas id="surfacePrint"></canvas>
+        </div>
+        <div class="surface-title">Archival print</div>
+        <div class="surface-meta">1 : 1 · Cotton rag</div>
+      </div>
+
+      <div class="surface-item">
+        <div class="surface-label">
+          <span class="num">ii</span>
+          <span>Scarf</span>
+        </div>
+        <div class="surface-canvas-wrap" style="aspect-ratio: 3 / 1;">
+          <canvas id="surfaceScarf"></canvas>
+        </div>
+        <div class="surface-title">Silk scarf</div>
+        <div class="surface-meta">3 : 1 · Twill silk</div>
+      </div>
+
+      <div class="surface-item">
+        <div class="surface-label">
+          <span class="num">iii</span>
+          <span>Textile</span>
+        </div>
+        <div class="surface-canvas-wrap" style="aspect-ratio: 4 / 3;">
+          <canvas id="surfaceTextile"></canvas>
+        </div>
+        <div class="surface-title">Fabric yardage</div>
+        <div class="surface-meta">4 : 3 · Repeat tile</div>
+      </div>
+
+      <div class="surface-item">
+        <div class="surface-label">
+          <span class="num">iv</span>
+          <span>Wall</span>
+        </div>
+        <div class="surface-canvas-wrap" style="aspect-ratio: 2 / 3;">
+          <canvas id="surfaceWall"></canvas>
+        </div>
+        <div class="surface-title">Wallpaper</div>
+        <div class="surface-meta">2 : 3 · Vertical repeat</div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- PROCESS -->
+<section class="section page" id="process">
+
+  <div class="section-head">
+    <span class="section-number">03 / Process</span>
+    <h2 class="section-title">
+      Structure<br />
+      behind the <em>collective.</em>
+    </h2>
+  </div>
+
+  <div class="process-grid">
+
+    <article class="process-card">
+      <span class="process-number">01 / Seed</span>
+      <h3>Variation</h3>
+      <p>
+        A numeric seed initializes the background tone, the shadow
+        colour, the foreground palette (2 to 8 colours), the shape
+        mode (1 of 16), and the spacing and cell size of the grid.
+        Each output is regenerated and documented as a distinct,
+        traceable work.
+      </p>
+    </article>
+
+    <article class="process-card">
+      <span class="process-number">02 / Collecting</span>
+      <h3>Geometry</h3>
+      <p>
+        Every cell is filled with the same mode of shape — triangle,
+        square, rectangle, arc, or mixed — but each shape is drawn
+        with its own angle, size, colour, stroke weight, and glow.
+        The result is a mesh of individual voices held together by
+        one shared rule.
+      </p>
+    </article>
+
+    <article class="process-card">
+      <span class="process-number">03 / Surface</span>
+      <h3>Application</h3>
+      <p>
+        The resulting composition becomes a surface-design asset —
+        explored across garments, textile prints, wallpaper
+        and other pattern-driven applications.
+      </p>
+    </article>
+
+  </div>
+
+</section>
+
+<!-- ARCHIVE -->
+<section class="section page" id="archive">
+
+  <div class="section-head">
+    <span class="section-number">04 / Archive</span>
+    <h2 class="section-title">
+      Selected<br />
+      <em>seeds.</em>
+    </h2>
+  </div>
+
+  <div class="archive-grid" id="archiveGrid"></div>
+
+  <div class="archive-note">
+    <span>8 compositions · Open series</span>
+    <span class="hint">Click any plate to load it above</span>
+  </div>
+
+</section>
+
+<!-- COMMISSION -->
+<section class="commission" id="commission">
+
+  <div class="page">
+
+    <div class="commission-layout">
+
+      <div>
+        <span class="eyebrow">For brands &amp; studios</span>
+        <h2 class="commission-title">
+          One system.<br />
+          Many <em>surfaces.</em>
+        </h2>
+      </div>
+
+      <div>
+        <p class="commission-copy">
+          Socialism of Shapes is a generative design system rather
+          than a single artwork. Its collective-shape language can
+          be adapted for fashion, textile development and other
+          surface-oriented contexts — while maintaining a
+          computational origin.
+        </p>
+
+        <div class="service-list">
+          <div class="service-item">
+            <span class="num">i</span>
+            <div>
+              <span class="title">Licensing</span>
+              <span class="desc">Existing seeds from the archive, licensed for production use.</span>
+            </div>
+          </div>
+          <div class="service-item">
+            <span class="num">ii</span>
+            <div>
+              <span class="title">Commission</span>
+              <span class="desc">New compositions designed to your palette, repeat and product.</span>
+            </div>
+          </div>
+          <div class="service-item">
+            <span class="num">iii</span>
+            <div>
+              <span class="title">Systems</span>
+              <span class="desc">A private generative tool built for your studio's ongoing use.</span>
+            </div>
+          </div>
+        </div>
+
+        <a class="contact-cta"
+           href="mailto:reyhanehdaneshdoost@gmail.com?subject=Socialism%20of%20Shapes%20—%20Collaboration">
+          Begin a Conversation
+        </a>
+      </div>
+
+    </div>
+
+    <!-- MOCKUP GALLERY -->
+    <div class="mockup-gallery">
+
+      <div class="mockup-head">
+        <span class="eyebrow">Applied · Socialism of Shapes</span>
+        <h3 class="mockup-title">
+          The same seed,<br />
+          <em>three surfaces.</em>
+        </h3>
+      </div>
+
+      <div class="mockup-grid">
+
+        <figure class="mockup-item">
+          <div class="mockup-frame">
+            <img src="images/tote.png" alt="Socialism of Shapes tote bag — applied composition" loading="lazy" />
+          </div>
+          <figcaption>
+            <span class="mockup-id">01 / Tote</span>
+            <span class="mockup-seed">Seed 60806030</span>
+          </figcaption>
+        </figure>
+
+        <figure class="mockup-item">
+          <div class="mockup-frame">
+            <img src="images/tee.png" alt="Socialism of Shapes t-shirt — applied composition" loading="lazy" />
+          </div>
+          <figcaption>
+            <span class="mockup-id">02 / Apparel</span>
+            <span class="mockup-seed">Seed 60806030</span>
+          </figcaption>
+        </figure>
+
+        <figure class="mockup-item">
+          <div class="mockup-frame">
+            <img src="images/cushion.png" alt="Socialism of Shapes cushion — applied composition" loading="lazy" />
+          </div>
+          <figcaption>
+            <span class="mockup-id">03 / Interior</span>
+            <span class="mockup-seed">Seed 60806030</span>
+          </figcaption>
+        </figure>
+
+      </div>
+
+      <p class="mockup-note">
+        Each surface is drawn from the same numeric seed —
+        reproducible, licensable, adaptable to your brief.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- COLOPHON -->
+<footer class="colophon page">
+
+  <div class="col">
+    <span class="col-mark">Socialism <em>of Shapes</em></span>
+    <p>
+      A catalogue of computational collective compositions,
+      published as an open series.
+    </p>
+  </div>
+
+  <div class="col">
+    <span class="col-title">Catalogue</span>
+    <a href="#statement">Statement</a>
+    <a href="#work">Plate 001</a>
+    <a href="#application">Surfaces</a>
+    <a href="#process">Process</a>
+    <a href="#archive">Archive</a>
+    <a href="#commission">Commission</a>
+  </div>
+
+  <div class="col">
+    <span class="col-title">Studio</span>
+    <a href="mailto:reyhanehdaneshdoost@gmail.com">reyhanehdaneshdoost@gmail.com</a>
+    <a href="https://reyrove.github.io/">Website</a>
+    <a href="https://www.instagram.com/rey._.rove/">Instagram</a>
+    <a href="https://www.linkedin.com/in/reyhaneh-daneshdoost-730481160/">LinkedIn</a>
+    <a href="https://x.com/reyrove">X</a>
+  </div>
+
+  <div class="col">
+    <span class="col-title">Legal</span>
+    <a href="#" data-legal="licensing">Licensing</a>
+    <a href="#" data-legal="terms">Terms</a>
+    <a href="#" data-legal="credits">Credits</a>
+  </div>
+
+  <div class="colophon-end">
+    <span>© <span id="year"></span> Socialism of Shapes · All compositions reproducible by seed</span>
+    <span class="mark">Generative Collective Pattern</span>
+  </div>
+
+</footer>
+
+<!-- LEGAL MODAL -->
+<div class="legal-modal" id="legalModal" aria-hidden="true">
+  <div class="legal-overlay" data-close></div>
+
+  <div class="legal-dialog" role="dialog" aria-modal="true" aria-labelledby="legalTitle">
+    <button class="legal-close" type="button" data-close aria-label="Close">×</button>
+
+    <span class="legal-eyebrow" id="legalEyebrow">Legal</span>
+    <h3 class="legal-title" id="legalTitle">—</h3>
+    <div class="legal-body" id="legalBody"></div>
+
+    <div class="legal-foot">
+      <span>Socialism of Shapes</span>
+      <a href="mailto:reyhanehdaneshdoost@gmail.com">reyhanehdaneshdoost@gmail.com</a>
+    </div>
+  </div>
 </div>
 
 <script>
-// ============================================
-// SOCIALISM OF SHAPES — Generative Art
-// ============================================
+// ============================================================
+// SOCIALISM OF SHAPES — GENERATIVE COLLECTIVE PATTERNS
+// Fully static: every canvas renders a seeded still.
+// Master offscreen rendering — the field is drawn once and
+// blitted everywhere.
+// ============================================================
 
-const ratio = 1 / 1;
-const prefix = 'Socialism of Shapes';
-
-// ============================================
-// Random utility (replaces fxhash)
-// ============================================
-let seed = Math.random() * 2147483647;
-
-function setSeed(newSeed) {
-    seed = newSeed;
+class RandomGenerator {
+  constructor(seed) {
+    this.seed = seed;
+    this.state = seed;
+  }
+  rand() {
+    let x = this.state;
+    x ^= x << 13;
+    x ^= x >> 17;
+    x ^= x << 5;
+    this.state = x;
+    return (x >>> 0) / 4294967296;
+  }
 }
 
-function random() {
-    seed = (seed * 9301 + 49297) % 233280;
-    return seed / 233280;
+const prefix = 'Socialism-of-Shapes';
+let seed = Math.floor(Date.now() + Math.random() * 1000000);
+let rng = new RandomGenerator(seed);
+let resizeTmr = null;
+
+const MASTER_SIZE = 1024;
+const ARCHIVE_SIZE = 320;
+
+let masterCanvas = null;
+let masterCoverCanvas = null;
+
+function seedLabel(n) {
+  return String(n).slice(-8);
 }
 
-// ============================================
-// Color palettes
-// ============================================
+// ============================================================
+// Colour palettes (preserved exactly)
+// ============================================================
 const backgroundColours = [
-    '#F5F5F5','#9AFEFF','#AAF0D1','#CCFB5D','#E3F9A6',
-    '#FED8B1','#FFFF33','#BCB88A','#FCDFFF','#FAAFBE',
-    '#F7CAC9','#FFCBA4','#FBD5AB','#FFF0DB','#D291BC',
-    '#FEA3AA','#FFB2D0','#EDC9AF','#FFF8DC','#CCFFFF',
-    '#87CEFA','#BDEDFF'
+  '#F5F5F5','#9AFEFF','#AAF0D1','#CCFB5D','#E3F9A6',
+  '#FED8B1','#FFFF33','#BCB88A','#FCDFFF','#FAAFBE',
+  '#F7CAC9','#FFCBA4','#FBD5AB','#FFF0DB','#D291BC',
+  '#FEA3AA','#FFB2D0','#EDC9AF','#FFF8DC','#CCFFFF',
+  '#87CEFA','#BDEDFF'
 ];
 const backgroundNames = [
-    'WhiteSmoke','Electric Blue','Magic Mint','Tea Green','Organic Brown',
-    'Light Orange','Neon Yellow','Sage','Cotton Candy','Donut Pink',
-    'Rose Quartz','Deep Peach','Coral Peach','Light Beige','Pastel Violet',
-    'Pastel Pink','Powder Pink','Desert Sand','Cornsilk','Light Slate',
-    'LightSkyBlue','Robin Egg Blue'
+  'WhiteSmoke','Electric Blue','Magic Mint','Tea Green','Organic Brown',
+  'Light Orange','Neon Yellow','Sage','Cotton Candy','Donut Pink',
+  'Rose Quartz','Deep Peach','Coral Peach','Light Beige','Pastel Violet',
+  'Pastel Pink','Powder Pink','Desert Sand','Cornsilk','Light Slate',
+  'LightSkyBlue','Robin Egg Blue'
 ];
 
 const ShadowColours = [
-    '#000000','#040720','#0C090A','#151B54','#033E3E',
-    '#25383C','#2C3539','#004225','#483C32','#3D3635',
-    '#3B2F2F','#43302E','#800000','#551606','#2F0909',
-    '#2B1B17','#990012','#2E1A47','#36013F','#4B0150',
-    '#4E5180','#583759','#550A35'
+  '#000000','#040720','#0C090A','#151B54','#033E3E',
+  '#25383C','#2C3539','#004225','#483C32','#3D3635',
+  '#3B2F2F','#43302E','#800000','#551606','#2F0909',
+  '#2B1B17','#990012','#2E1A47','#36013F','#4B0150',
+  '#4E5180','#583759','#550A35'
 ];
 const ShadowNames = [
-    'black','Black Blue','Night','Night Blue','Deep Teal',
-    'DarkSlateGray','Gunmetal','Lotus Green','Taupe','Gray Brown',
-    'Dark Coffee','Old Burgundy','Maroon','Blood Night','Dark Maroon',
-    'Midnight','Red Wine','Midnight Purple','Deep Purple','Dark Purple',
-    'Purple Navy','Plum Purple','Purple Lily'
+  'black','Black Blue','Night','Night Blue','Deep Teal',
+  'DarkSlateGray','Gunmetal','Lotus Green','Taupe','Gray Brown',
+  'Dark Coffee','Old Burgundy','Maroon','Blood Night','Dark Maroon',
+  'Midnight','Red Wine','Midnight Purple','Deep Purple','Dark Purple',
+  'Purple Navy','Plum Purple','Purple Lily'
 ];
 
 const foregroundColours = [
-    ['#9F21DE','#60DE21'],
-    ['#F20DB2','#0DF24D'],
-    ['#1DAEE2','#E2511D','#4ABEE8','#EA7348'],
-    ['#C1200F','#0FC120','#200FC1'],
-    ['#EEA211','#11EEA2','#A211EE'],
-    ['#FAFB04','#04FAFB','#FB04FA'],
-    ['#A0D42B','#2BA0D4','#D42BA0'],
-    ['#46EC13','#1346EC','#EC1346'],
-    ['#E916C0','#E9A816','#16E93F','#1657E9'],
-    ['#F00F56','#C7F00F','#0FF0A9','#380FF0'],
-    ['#F00F1A','#8BF00F','#0FF0E5','#740FF0'],
-    ['#EB1914','#EB8414','#EB147B'],
-    ['#EFBB10','#B4EF10','#EF4B10'],
-    ['#C0A23F','#9DC03F','#C0623F'],
-    ['#A4EB14','#38EB14','#EBC714'],
-    ['#45BA4E','#45BA89','#76BA45'],
-    ['#29D6A4','#29B1D6','#29D64E'],
-    ['#1EBAE1','#1E59E1','#1EE1A6'],
-    ['#3A77C5','#423AC5','#3ABDC5'],
-    ['#1732E8','#6417E8','#179BE8'],
-    ['#673AC5','#AD3AC5','#3A52C5'],
-    ['#9216E9','#E916D6','#2916E9'],                              
-    ['#DC11EE','#EE1191','#6E11EE'],
-    ['#A855AA','#AA5582','#7D55AA'],
-    ['#F00FBE','#F00F4D','#F00F4D'],
-    ['#D42B85','#D42B31','#CE2BD4'],
-    ['#DD0D44','#DD3E0D','#DD0DAC'],
-    ['#A55A5C','#A57D5A','#A55A82'],
-    ['#B7489F','#9FB748','#489FB7'],
-    ['#78B649','#4978B6','#B64978'],
-    ['#0EF1BB','#BB0EF1','#F1BB0E'],
-    ['#93E01F','#1F93E0','#E01F93'],
-    ['#E7BE18','#18E756','#1841E7','#E718A9'],
-    ['#6A1DE2','#E21D33','#95E21D','#1DE2CC'],
-    ['#47D629','#299DD6','#B829D6','#D66229'],
-    ['#816A95','#9A88AA'],
-    ['#22DDB9','#4EE4C7'],
-    ['#292ED6','#D62984','#D6D129','#29D67B','#808080','#E98DBD','#D62935','#299ED6'],
-    ['#E21D93','#A4D1D1','#D4D629','#1A6386','#B84747','#D1A4A4','#29D6A4','#ABD9EF'],
-    ['#ADD7A9','#A9A4D1','#E1D466','#971D7E','#048184','#E58400','#F7D8F6','#04FDEB'],
-    ['#A47F5B','#5B80A4'],
-    ['#2AD86E','#BDD82A'],
-    ['#086D58','#0DA685','#0FBF9A','#11DBB0','#1FEEC2','#58F2D1','#92F7E1','#C5FBEF'],
-    ['#8D1E03','#C12904','#E53105','#FA4A1F','#FB7251','#FC9981','#FDC3B4','#FEDDD5']
+  ['#9F21DE','#60DE21'],
+  ['#F20DB2','#0DF24D'],
+  ['#1DAEE2','#E2511D','#4ABEE8','#EA7348'],
+  ['#C1200F','#0FC120','#200FC1'],
+  ['#EEA211','#11EEA2','#A211EE'],
+  ['#FAFB04','#04FAFB','#FB04FA'],
+  ['#A0D42B','#2BA0D4','#D42BA0'],
+  ['#46EC13','#1346EC','#EC1346'],
+  ['#E916C0','#E9A816','#16E93F','#1657E9'],
+  ['#F00F56','#C7F00F','#0FF0A9','#380FF0'],
+  ['#F00F1A','#8BF00F','#0FF0E5','#740FF0'],
+  ['#EB1914','#EB8414','#EB147B'],
+  ['#EFBB10','#B4EF10','#EF4B10'],
+  ['#C0A23F','#9DC03F','#C0623F'],
+  ['#A4EB14','#38EB14','#EBC714'],
+  ['#45BA4E','#45BA89','#76BA45'],
+  ['#29D6A4','#29B1D6','#29D64E'],
+  ['#1EBAE1','#1E59E1','#1EE1A6'],
+  ['#3A77C5','#423AC5','#3ABDC5'],
+  ['#1732E8','#6417E8','#179BE8'],
+  ['#673AC5','#AD3AC5','#3A52C5'],
+  ['#9216E9','#E916D6','#2916E9'],
+  ['#DC11EE','#EE1191','#6E11EE'],
+  ['#A855AA','#AA5582','#7D55AA'],
+  ['#F00FBE','#F00F4D','#F00F4D'],
+  ['#D42B85','#D42B31','#CE2BD4'],
+  ['#DD0D44','#DD3E0D','#DD0DAC'],
+  ['#A55A5C','#A57D5A','#A55A82'],
+  ['#B7489F','#9FB748','#489FB7'],
+  ['#78B649','#4978B6','#B64978'],
+  ['#0EF1BB','#BB0EF1','#F1BB0E'],
+  ['#93E01F','#1F93E0','#E01F93'],
+  ['#E7BE18','#18E756','#1841E7','#E718A9'],
+  ['#6A1DE2','#E21D33','#95E21D','#1DE2CC'],
+  ['#47D629','#299DD6','#B829D6','#D66229'],
+  ['#816A95','#9A88AA'],
+  ['#22DDB9','#4EE4C7'],
+  ['#292ED6','#D62984','#D6D129','#29D67B','#808080','#E98DBD','#D62935','#299ED6'],
+  ['#E21D93','#A4D1D1','#D4D629','#1A6386','#B84747','#D1A4A4','#29D6A4','#ABD9EF'],
+  ['#ADD7A9','#A9A4D1','#E1D466','#971D7E','#048184','#E58400','#F7D8F6','#04FDEB'],
+  ['#A47F5B','#5B80A4'],
+  ['#2AD86E','#BDD82A'],
+  ['#086D58','#0DA685','#0FBF9A','#11DBB0','#1FEEC2','#58F2D1','#92F7E1','#C5FBEF'],
+  ['#8D1E03','#C12904','#E53105','#FA4A1F','#FB7251','#FC9981','#FDC3B4','#FEDDD5']
 ];
 
-// ============================================
-// State
-// ============================================
-let features = {};
-let resizeTmr = null;
-let thumbnailTaken = false;
-let animated = false;
-let nextFrame = null;
-let showingShirt = false;
-
-// ============================================
-// Setup
-// ============================================
-function setup() {
-    const backgroundIndex = Math.floor(random() * backgroundColours.length);
-    const ShadowIndex = Math.floor(random() * ShadowColours.length);
-    const foregroundIndex = Math.floor(random() * foregroundColours.length);
-
-    features.backgroundColour = backgroundColours[backgroundIndex];
-    features.ShadowColor = ShadowColours[ShadowIndex];
-    features.lineColours = foregroundColours[foregroundIndex];
-    features.backgroundName = backgroundNames[backgroundIndex];
-    features.shadowName = ShadowNames[ShadowIndex];
-    features.shapeMode = Math.floor(random() * 16);
-
-    // Update info display
-    document.getElementById('bgDisplay').textContent = features.backgroundName;
-    document.getElementById('shadowDisplay').textContent = features.shadowName;
-    document.getElementById('shapesDisplay').textContent = features.shapeMode + 1;
-}
-
-// ============================================
-// Shape functions
-// ============================================
+// ---- Shape primitives (preserved exactly) ----
 function Triangle(ctx, x, y, size, angle) {
-    const halfHeight = Math.sqrt(3) / 2 * size;
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(angle);
-    ctx.beginPath();
-    ctx.moveTo(0, halfHeight);
-    ctx.lineTo(-size, -halfHeight);
-    ctx.lineTo(size, -halfHeight);
-    ctx.closePath();
-    ctx.restore();
+  const halfHeight = Math.sqrt(3) / 2 * size;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.beginPath();
+  ctx.moveTo(0, halfHeight);
+  ctx.lineTo(-size, -halfHeight);
+  ctx.lineTo(size, -halfHeight);
+  ctx.closePath();
+  ctx.restore();
 }
 
 function Square(ctx, x, y, size, angle) {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(angle);
-    ctx.beginPath();
-    ctx.moveTo(-size, size);
-    ctx.lineTo(-size, -size);
-    ctx.lineTo(size, -size);
-    ctx.lineTo(size, size);
-    ctx.closePath();
-    ctx.restore();
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.beginPath();
+  ctx.moveTo(-size, size);
+  ctx.lineTo(-size, -size);
+  ctx.lineTo(size, -size);
+  ctx.lineTo(size, size);
+  ctx.closePath();
+  ctx.restore();
 }
 
 function Rectangle(ctx, x, y, size1, size2, angle) {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(angle);
-    ctx.beginPath();
-    ctx.moveTo(-size1, size2);
-    ctx.lineTo(-size1, -size2);
-    ctx.lineTo(size1, -size2);
-    ctx.lineTo(size1, size2);
-    ctx.closePath();
-    ctx.restore();
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.beginPath();
+  ctx.moveTo(-size1, size2);
+  ctx.lineTo(-size1, -size2);
+  ctx.lineTo(size1, -size2);
+  ctx.lineTo(size1, size2);
+  ctx.closePath();
+  ctx.restore();
 }
 
-function shape(ctx, x, y, size, angle) {
-    const Q = Math.floor(random() * 8);
-    if (Q == 0) {
-        Square(ctx, x, y, size, angle);
-    } else if (Q == 1) {
-        Triangle(ctx, x, y, size, angle);
-    } else if (Q == 2) {
-        Triangle(ctx, x, y, size, angle + Math.PI / 2);
-    } else if (Q == 3) {
-        Triangle(ctx, x, y, size, angle + Math.PI);
-    } else if (Q == 4) {
-        Triangle(ctx, x, y, size, angle + 3 * Math.PI / 2);
-    } else if (Q == 5) {
-        Rectangle(ctx, x, y, random() * size, random() * size, angle);
-    } else if (Q == 6) {
-        ctx.arc(x, y, size, 0, 2 * Math.PI);
-    }
+function shapeHelper(ctx, x, y, size, angle, r) {
+  const Q = Math.floor(r.rand() * 8);
+  if (Q === 0) {
+    Square(ctx, x, y, size, angle);
+  } else if (Q === 1) {
+    Triangle(ctx, x, y, size, angle);
+  } else if (Q === 2) {
+    Triangle(ctx, x, y, size, angle + Math.PI / 2);
+  } else if (Q === 3) {
+    Triangle(ctx, x, y, size, angle + Math.PI);
+  } else if (Q === 4) {
+    Triangle(ctx, x, y, size, angle + 3 * Math.PI / 2);
+  } else if (Q === 5) {
+    Rectangle(ctx, x, y, r.rand() * size, r.rand() * size, angle);
+  } else if (Q === 6) {
+    ctx.arc(x, y, size, 0, 2 * Math.PI);
+  }
 }
 
-// ============================================
-// Canvas drawing
-// ============================================
-function drawCanvas() {
-    window.cancelAnimationFrame(nextFrame);
+// ============================================================
+// CORE FIELD RENDERER
+// ============================================================
+function renderFieldToOffscreen(seedValue, size) {
+  const r = new RandomGenerator(seedValue);
+  const off = document.createElement('canvas');
+  off.width = size;
+  off.height = size;
+  const ctx = off.getContext('2d');
 
-    const canvas = document.getElementById('target');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const w = canvas.width;
-    const h = canvas.height;
+  const w = size;
+  const h = size;
 
-    ctx.fillStyle = features.backgroundColour;
-    ctx.fillRect(0, 0, w, h);
-    
-    const A = features.shapeMode;
-    const space = w / (random() * 40 + 10);
-    const size = w / (random() * 40 + 20);
+  // ---- setup ----
+  const bgIndex = Math.floor(r.rand() * backgroundColours.length);
+  const shadowIndex = Math.floor(r.rand() * ShadowColours.length);
+  const fgIndex = Math.floor(r.rand() * foregroundColours.length);
 
-    for (let i = -5 * space; i < w; i += space) {
-        for (let j = -5 * space; j < h; j += space) {
-            const n = 2 * random();
-            ctx.strokeStyle = features.lineColours[Math.floor(random() * features.lineColours.length)];
-            ctx.lineWidth = w / (random() * 600 + 200);
-            ctx.shadowColor = features.ShadowColor;
-            ctx.shadowBlur = w / (random() * 70 + 80);
+  const bgColour = backgroundColours[bgIndex];
+  const shadowColour = ShadowColours[shadowIndex];
+  const lineColours = foregroundColours[fgIndex];
+  const shapeMode = Math.floor(r.rand() * 16);
 
-            if (A == 0) {
-                const S = size * 20 * random();
-                if (n < random() * 1.6 + 0.1) {
-                    ctx.beginPath();
-                    ctx.moveTo(i, j);
-                    ctx.lineTo(i + S, j + S);
-                    ctx.stroke();
-                    ctx.closePath();
-                } else {
-                    ctx.beginPath();
-                    ctx.moveTo(i + S, j);
-                    ctx.lineTo(i, j + S / 2);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
-            } else if (A == 1) {
-                if (n < random() * 1.6 + 0.1) {
-                    ctx.beginPath();
-                    ctx.arc(i + size, j + size, size, 0, 2 * Math.PI);
-                    ctx.stroke();
-                    ctx.closePath();
-                } else {
-                    ctx.beginPath();
-                    ctx.arc(i + size, j + size, random() * size, 0, 2 * Math.PI);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
-            } else if (A == 2) {
-                if (n < random() * 1.6 + 0.1) {
-                    ctx.beginPath();
-                    ctx.arc(i + size, j + size, size, 2 * random() * Math.PI, 2 * random() * Math.PI);
-                    ctx.stroke();
-                    ctx.closePath();
-                } else {
-                    ctx.beginPath();
-                    ctx.arc(i + random() * size, j + random() * size, size, 2 * random() * Math.PI, 2 * random() * Math.PI);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
-            } else if (A == 3) {
-                if (n < random() * 1.6 + 0.1) {
-                    ctx.beginPath();
-                    ctx.arc(i + size, j + size, random() * size + size, 0, 2 * Math.PI);
-                    ctx.stroke();
-                    ctx.closePath();
-                } else {
-                    ctx.beginPath();
-                    ctx.arc(i + size, j + random() * size, random() * size + size, 0, 2 * Math.PI);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
-            } else if (A == 4) {
-                if (n < random() * 1.6 + 0.1) {
-                    ctx.beginPath();
-                    Triangle(ctx, i + size, j + size, size, random() * Math.PI);
-                    ctx.stroke();
-                    ctx.closePath();
-                } else {
-                    ctx.beginPath();
-                    Triangle(ctx, i + size, j + size, random() * size + size, random() * Math.PI);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
-            } else if (A == 5) {
-                if (n < random() * 1.6 + 0.1) {
-                    ctx.beginPath();
-                    Triangle(ctx, i + size, j + size, random() * size + size, 0);
-                    ctx.stroke();
-                    ctx.closePath();
-                } else {
-                    ctx.beginPath();
-                    Triangle(ctx, i + random() * size, j + random() * size, random() * size + size, 0);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
-            } else if (A == 6) {
-                if (n < random() * 1.6 + 0.1) {
-                    ctx.beginPath();
-                    Triangle(ctx, i + size, j + size, random() * size + size, Math.PI / 2);
-                    ctx.stroke();
-                    ctx.closePath();
-                } else {
-                    ctx.beginPath();
-                    Triangle(ctx, i + random() * size, j + random() * size, random() * size + size, Math.PI / 2);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
-            } else if (A == 7) {
-                if (n < random() * 1.6 + 0.1) {
-                    ctx.beginPath();
-                    Triangle(ctx, i + size, j + size, random() * size + size, Math.PI);
-                    ctx.stroke();
-                    ctx.closePath();
-                } else {
-                    ctx.beginPath();
-                    Triangle(ctx, i + random() * size, j + random() * size, random() * size + size, Math.PI);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
-            } else if (A == 8) {
-                if (n < random() * 1.6 + 0.1) {
-                    ctx.beginPath();
-                    Triangle(ctx, i + size, j + size, random() * size + size, 3 * Math.PI / 2);
-                    ctx.stroke();
-                    ctx.closePath();
-                } else {
-                    ctx.beginPath();
-                    Triangle(ctx, i + random() * size, j + random() * size, random() * size + size, 3 * Math.PI / 2);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
-            } else if (A == 9) {
-                if (n < random() * 1.6 + 0.1) {
-                    ctx.beginPath();
-                    Square(ctx, i + size, j + size, size, random() * Math.PI);
-                    ctx.stroke();
-                    ctx.closePath();
-                } else {
-                    ctx.beginPath();
-                    Square(ctx, i + size, j + size, random() * size + size, random() * Math.PI);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
-            } else if (A == 10) {
-                if (n < random() * 1.6 + 0.1) {
-                    ctx.beginPath();
-                    Square(ctx, i + size, j + size, random() * size + size, 0);
-                    ctx.stroke();
-                    ctx.closePath();
-                } else {
-                    ctx.beginPath();
-                    Square(ctx, i + random() * size, j + random() * size, random() * size + size, 0);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
-            } else if (A == 11) {
-                if (n < random() * 1.6 + 0.1) {
-                    ctx.beginPath();
-                    Square(ctx, i + size, j + size, random() * size + size, Math.PI / 4);
-                    ctx.stroke();
-                    ctx.closePath();
-                } else {
-                    ctx.beginPath();
-                    Square(ctx, i + random() * size, j + random() * size, random() * size + size, Math.PI / 4);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
-            } else if (A == 12) {
-                if (n < random() * 1.6 + 0.1) {
-                    ctx.beginPath();
-                    shape(ctx, i + size, j + size, random() * size + size, 0);
-                    ctx.stroke();
-                    ctx.closePath();
-                } else {
-                    ctx.beginPath();
-                    shape(ctx, i + random() * size, j + random() * size, random() * size + size, 0);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
-            } else if (A == 13) {
-                if (n < random() * 1.6 + 0.1) {
-                    ctx.beginPath();
-                    shape(ctx, i + size, j + size, size, random() * size + size, Math.PI);
-                    ctx.stroke();
-                    ctx.closePath();
-                } else {
-                    ctx.beginPath();
-                    shape(ctx, i + random() * size, j + random() * size, size, random() * size + size, Math.PI);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
-            } else if (A == 14) {
-                if (n < random() * 1.6 + 0.1) {
-                    ctx.beginPath();
-                    Rectangle(ctx, i + size, j + size, random() * size, random() * size + size, 0);
-                    ctx.stroke();
-                    ctx.closePath();
-                } else {
-                    ctx.beginPath();
-                    Rectangle(ctx, i + size, j + size, random() * size, random() * size + size, random() * Math.PI);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
-            } else if (A == 15) {
-                if (n < random() * 1.6 + 0.1) {
-                    ctx.beginPath();
-                    Rectangle(ctx, i + size, j + size, random() * size + size, random() * size + size, random() * Math.PI);
-                    ctx.stroke();
-                    ctx.closePath();
-                } else {
-                    ctx.beginPath();
-                    Rectangle(ctx, i + random() * size, j + random() * size, random() * size + size, random() * size + size, random() * Math.PI);
-                    ctx.stroke();
-                    ctx.closePath();
-                }
-            }
-        }
-    }
+  // ---- background ----
+  ctx.fillStyle = bgColour;
+  ctx.fillRect(0, 0, w, h);
 
-    if (animated) {
-        nextFrame = window.requestAnimationFrame(drawCanvas);
-    }
-}
+  const A = shapeMode;
+  const space = w / (r.rand() * 40 + 10);
+  const baseSize = w / (r.rand() * 40 + 20);
 
-// ============================================
-// Layout
-// ============================================
-function layoutCanvas() {
-    window.cancelAnimationFrame(nextFrame);
+  // ---- shape field ----
+  for (let i = -5 * space; i < w; i += space) {
+    for (let j = -5 * space; j < h; j += space) {
+      const n = 2 * r.rand();
+      ctx.strokeStyle = lineColours[Math.floor(r.rand() * lineColours.length)];
+      ctx.lineWidth = w / (r.rand() * 600 + 200);
+      ctx.shadowColor = shadowColour;
+      ctx.shadowBlur = w / (r.rand() * 70 + 80);
 
-    const wrapper = document.getElementById('canvas-wrapper');
-    const rect = wrapper.getBoundingClientRect();
-    
-    const wWidth = rect.width;
-    const wHeight = rect.height;
-    const dpr = window.devicePixelRatio || 1;
+      const size = baseSize;
 
-    // Remove existing canvases
-    const canvases = wrapper.getElementsByTagName('canvas');
-    Array.from(canvases).forEach(c => c.remove());
-
-    let cWidth = wWidth;
-    let cHeight = cWidth / ratio;
-
-    if (cHeight > wHeight) {
-        cHeight = wHeight;
-        cWidth = wHeight * ratio;
-    }
-
-    const targetWidth = Math.floor(cWidth * dpr);
-    const targetHeight = Math.floor(cHeight * dpr);
-
-    const canvas = document.createElement('canvas');
-    canvas.id = 'target';
-    canvas.width = targetWidth;
-    canvas.height = targetHeight;
-    wrapper.appendChild(canvas);
-
-    canvas.style.position = 'absolute';
-    canvas.style.width = cWidth + 'px';
-    canvas.style.height = cHeight + 'px';
-    canvas.style.top = '50%';
-    canvas.style.left = '50%';
-    canvas.style.transform = 'translate(-50%, -50%)';
-    canvas.style.zIndex = '1';
-
-    canvas.style.display = 'block';
-
-    drawCanvas();
-}
-
-// ============================================
-// Download
-// ============================================
-function downloadCanvas() {
-    if (showingShirt) {
-        const link = document.createElement('a');
-        link.download = 'Socialism_of_Shapes_Shirt.png';
-        const img = document.getElementById('shirt-mockup');
-        if (img && img.src) {
-            link.href = img.src;
+      if (A === 0) {
+        const S = size * 20 * r.rand();
+        if (n < r.rand() * 1.6 + 0.1) {
+          ctx.beginPath();
+          ctx.moveTo(i, j);
+          ctx.lineTo(i + S, j + S);
+          ctx.stroke();
+          ctx.closePath();
         } else {
-            const canvas = document.getElementById('target');
-            if (canvas) link.href = canvas.toDataURL('image/png');
+          ctx.beginPath();
+          ctx.moveTo(i + S, j);
+          ctx.lineTo(i, j + S / 2);
+          ctx.stroke();
+          ctx.closePath();
         }
-        link.click();
-        return;
+      } else if (A === 1) {
+        ctx.beginPath();
+        if (n < r.rand() * 1.6 + 0.1) {
+          ctx.arc(i + size, j + size, size, 0, 2 * Math.PI);
+        } else {
+          ctx.arc(i + size, j + size, r.rand() * size, 0, 2 * Math.PI);
+        }
+        ctx.stroke();
+        ctx.closePath();
+      } else if (A === 2) {
+        ctx.beginPath();
+        if (n < r.rand() * 1.6 + 0.1) {
+          ctx.arc(i + size, j + size, size, 2 * r.rand() * Math.PI, 2 * r.rand() * Math.PI);
+        } else {
+          ctx.arc(i + r.rand() * size, j + r.rand() * size, size, 2 * r.rand() * Math.PI, 2 * r.rand() * Math.PI);
+        }
+        ctx.stroke();
+        ctx.closePath();
+      } else if (A === 3) {
+        ctx.beginPath();
+        if (n < r.rand() * 1.6 + 0.1) {
+          ctx.arc(i + size, j + size, r.rand() * size + size, 0, 2 * Math.PI);
+        } else {
+          ctx.arc(i + size, j + r.rand() * size, r.rand() * size + size, 0, 2 * Math.PI);
+        }
+        ctx.stroke();
+        ctx.closePath();
+      } else if (A === 4) {
+        ctx.beginPath();
+        if (n < r.rand() * 1.6 + 0.1) {
+          Triangle(ctx, i + size, j + size, size, r.rand() * Math.PI);
+        } else {
+          Triangle(ctx, i + size, j + size, r.rand() * size + size, r.rand() * Math.PI);
+        }
+        ctx.stroke();
+        ctx.closePath();
+      } else if (A === 5) {
+        ctx.beginPath();
+        if (n < r.rand() * 1.6 + 0.1) {
+          Triangle(ctx, i + size, j + size, r.rand() * size + size, 0);
+        } else {
+          Triangle(ctx, i + r.rand() * size, j + r.rand() * size, r.rand() * size + size, 0);
+        }
+        ctx.stroke();
+        ctx.closePath();
+      } else if (A === 6) {
+        ctx.beginPath();
+        if (n < r.rand() * 1.6 + 0.1) {
+          Triangle(ctx, i + size, j + size, r.rand() * size + size, Math.PI / 2);
+        } else {
+          Triangle(ctx, i + r.rand() * size, j + r.rand() * size, r.rand() * size + size, Math.PI / 2);
+        }
+        ctx.stroke();
+        ctx.closePath();
+      } else if (A === 7) {
+        ctx.beginPath();
+        if (n < r.rand() * 1.6 + 0.1) {
+          Triangle(ctx, i + size, j + size, r.rand() * size + size, Math.PI);
+        } else {
+          Triangle(ctx, i + r.rand() * size, j + r.rand() * size, r.rand() * size + size, Math.PI);
+        }
+        ctx.stroke();
+        ctx.closePath();
+      } else if (A === 8) {
+        ctx.beginPath();
+        if (n < r.rand() * 1.6 + 0.1) {
+          Triangle(ctx, i + size, j + size, r.rand() * size + size, 3 * Math.PI / 2);
+        } else {
+          Triangle(ctx, i + r.rand() * size, j + r.rand() * size, r.rand() * size + size, 3 * Math.PI / 2);
+        }
+        ctx.stroke();
+        ctx.closePath();
+      } else if (A === 9) {
+        ctx.beginPath();
+        if (n < r.rand() * 1.6 + 0.1) {
+          Square(ctx, i + size, j + size, size, r.rand() * Math.PI);
+        } else {
+          Square(ctx, i + size, j + size, r.rand() * size + size, r.rand() * Math.PI);
+        }
+        ctx.stroke();
+        ctx.closePath();
+      } else if (A === 10) {
+        ctx.beginPath();
+        if (n < r.rand() * 1.6 + 0.1) {
+          Square(ctx, i + size, j + size, r.rand() * size + size, 0);
+        } else {
+          Square(ctx, i + r.rand() * size, j + r.rand() * size, r.rand() * size + size, 0);
+        }
+        ctx.stroke();
+        ctx.closePath();
+      } else if (A === 11) {
+        ctx.beginPath();
+        if (n < r.rand() * 1.6 + 0.1) {
+          Square(ctx, i + size, j + size, r.rand() * size + size, Math.PI / 4);
+        } else {
+          Square(ctx, i + r.rand() * size, j + r.rand() * size, r.rand() * size + size, Math.PI / 4);
+        }
+        ctx.stroke();
+        ctx.closePath();
+      } else if (A === 12) {
+        ctx.beginPath();
+        if (n < r.rand() * 1.6 + 0.1) {
+          shapeHelper(ctx, i + size, j + size, r.rand() * size + size, 0, r);
+        } else {
+          shapeHelper(ctx, i + r.rand() * size, j + r.rand() * size, r.rand() * size + size, 0, r);
+        }
+        ctx.stroke();
+        ctx.closePath();
+      } else if (A === 13) {
+        ctx.beginPath();
+        if (n < r.rand() * 1.6 + 0.1) {
+          shapeHelper(ctx, i + size, j + size, size, r.rand() * size + size, r);
+        } else {
+          shapeHelper(ctx, i + r.rand() * size, j + r.rand() * size, size, r.rand() * size + size, r);
+        }
+        ctx.stroke();
+        ctx.closePath();
+      } else if (A === 14) {
+        ctx.beginPath();
+        if (n < r.rand() * 1.6 + 0.1) {
+          Rectangle(ctx, i + size, j + size, r.rand() * size, r.rand() * size + size, 0);
+        } else {
+          Rectangle(ctx, i + size, j + size, r.rand() * size, r.rand() * size + size, r.rand() * Math.PI);
+        }
+        ctx.stroke();
+        ctx.closePath();
+      } else if (A === 15) {
+        ctx.beginPath();
+        if (n < r.rand() * 1.6 + 0.1) {
+          Rectangle(ctx, i + size, j + size, r.rand() * size + size, r.rand() * size + size, r.rand() * Math.PI);
+        } else {
+          Rectangle(ctx, i + r.rand() * size, j + r.rand() * size, r.rand() * size + size, r.rand() * size + size, r.rand() * Math.PI);
+        }
+        ctx.stroke();
+        ctx.closePath();
+      }
     }
-    
-    const canvas = document.getElementById('target');
-    if (!canvas) return;
-    const link = document.createElement('a');
-    const hash = Date.now().toString(36) + Math.random().toString(36).substring(2, 6);
-    link.download = prefix + '_' + hash + '.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+  }
+
+  ctx.shadowBlur = 0;
+
+  return {
+    canvas: off,
+    meta: {
+      background: backgroundNames[bgIndex],
+      shadow: ShadowNames[shadowIndex],
+      shapeMode: shapeMode + 1,
+    }
+  };
 }
 
-// ============================================
-// Regenerate
-// ============================================
+// ---- Blit helper ----
+function blitToCanvas(target, source) {
+  const ctx = target.getContext('2d');
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, target.width, target.height);
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(source, 0, 0, source.width, source.height, 0, 0, target.width, target.height);
+}
+
+// ============================================================
+// APP STATE
+// ============================================================
+const features = {};
+
+function rebuildMaster() {
+  const result = renderFieldToOffscreen(seed, MASTER_SIZE);
+  masterCanvas = result.canvas;
+  features.background = result.meta.background;
+  features.shadow = result.meta.shadow;
+  features.shapeMode = result.meta.shapeMode;
+}
+
+function rebuildCoverMaster() {
+  const result = renderFieldToOffscreen(seed ^ 0x9E3779B9, MASTER_SIZE);
+  masterCoverCanvas = result.canvas;
+}
+
+function drawCanvas() {
+  const canvas = document.getElementById('target');
+  if (!canvas) return;
+  rebuildMaster();
+  blitToCanvas(canvas, masterCanvas);
+  updateUI();
+  drawSurfaces();
+}
+
+function updateUI() {
+  const s = document.getElementById('seedDisplay');
+  const bg = document.getElementById('bgDisplay');
+  const sh = document.getElementById('shadowDisplay');
+  const sm = document.getElementById('shapesDisplay');
+  if (s) s.textContent = seedLabel(seed);
+  if (bg) bg.textContent = features.background || '—';
+  if (sh) sh.textContent = features.shadow || '—';
+  if (sm) sm.textContent = features.shapeMode || '—';
+}
+
 function regenerate() {
-    setSeed(Math.random() * 2147483647);
-    setup();
-    const wrapper = document.getElementById('canvas-wrapper');
-    const canvas = wrapper.querySelector('canvas');
-    if (canvas) {
-        canvas.remove();
-    }
-    const shirtMockup = document.getElementById('shirt-mockup');
-    shirtMockup.classList.remove('active');
-    showingShirt = false;
-    const shirtToggle = document.getElementById('shirtToggle');
-    shirtToggle.classList.remove('active');
-    shirtToggle.innerHTML = '<span class="icon">◷</span> apparel';
+  seed = Math.floor(Date.now() + Math.random() * 1000000);
+  rng = new RandomGenerator(seed);
+  layoutCanvas();
+  drawCover();
+  drawFramedPlate();
+  drawSurfaces();
+  updateUI();
+}
+
+function autoDownloadCanvas() {
+  const canvas = document.getElementById('target');
+  const link = document.createElement('a');
+  link.download = prefix + '_Seed' + seedLabel(seed) + '.png';
+  link.href = canvas.toDataURL('image/png', 1.0);
+  link.click();
+}
+
+function layoutCanvas() {
+  const container = document.getElementById('canvas-container');
+  if (!container) return;
+  const rect = container.getBoundingClientRect();
+
+  const pad = 40;
+  const maxW = Math.max(rect.width - pad, 200);
+  const maxH = Math.max(rect.height - pad, 200);
+
+  let cW = maxW, cH = cW;
+  if (cH > maxH) { cH = maxH; cW = maxH; }
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const canvas = document.getElementById('target');
+  canvas.width = cW * dpr;
+  canvas.height = cH * dpr;
+  canvas.style.width = cW + 'px';
+  canvas.style.height = cH + 'px';
+
+  drawCanvas();
+}
+
+function handleResize() {
+  clearTimeout(resizeTmr);
+  resizeTmr = setTimeout(() => {
     layoutCanvas();
+    drawCover();
+    drawFramedPlate();
+    drawSurfaces();
+    drawArchive();
+  }, 150);
 }
 
-// ============================================
-// Toggle Shirt
-// ============================================
-function toggleShirt() {
-    showingShirt = !showingShirt;
-    
-    const canvas = document.getElementById('target');
-    const shirtMockup = document.getElementById('shirt-mockup');
-    const shirtToggle = document.getElementById('shirtToggle');
-    
-    if (showingShirt) {
-        if (canvas) {
-            canvas.style.display = 'block';
-            canvas.style.zIndex = '1';
-        }
-        shirtMockup.classList.add('active');
-        shirtMockup.style.zIndex = '2';
-        shirtToggle.classList.add('active');
-        shirtToggle.innerHTML = '<span class="icon">◷</span> artwork';
-    } else {
-        if (canvas) {
-            canvas.style.display = 'block';
-            canvas.style.zIndex = '1';
-        }
-        shirtMockup.classList.remove('active');
-        shirtToggle.classList.remove('active');
-        shirtToggle.innerHTML = '<span class="icon">◷</span> apparel';
-    }
+function drawCover() {
+  const canvas = document.getElementById('coverCanvas');
+  if (!canvas) return;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const size = Math.min(720, Math.max(280, Math.floor(rect.width)));
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+
+  rebuildCoverMaster();
+  blitToCanvas(canvas, masterCoverCanvas);
 }
 
-// ============================================
-// Init
-// ============================================
+function drawFramedPlate() {
+  const canvas = document.getElementById('frameCanvas');
+  if (!canvas) return;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const size = Math.max(240, Math.floor(rect.width));
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
+  canvas.style.width = '100%';
+  canvas.style.height = 'auto';
+
+  if (!masterCanvas) rebuildMaster();
+  blitToCanvas(canvas, masterCanvas);
+}
+
+const surfaceDefs = [
+  { id: 'surfacePrint' },
+  { id: 'surfaceScarf' },
+  { id: 'surfaceTextile' },
+  { id: 'surfaceWall' },
+];
+
+function drawSurfaces() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+  if (!masterCanvas) rebuildMaster();
+
+  surfaceDefs.forEach(def => {
+    const canvas = document.getElementById(def.id);
+    if (!canvas) return;
+    const wrap = canvas.parentElement;
+    const wrapRect = wrap.getBoundingClientRect();
+
+    const wCss = Math.max(120, Math.floor(wrapRect.width));
+    const hCss = Math.max(80, Math.floor(wrapRect.height));
+
+    canvas.width = wCss * dpr;
+    canvas.height = hCss * dpr;
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+
+    blitToCanvas(canvas, masterCanvas);
+  });
+}
+
+const archiveSeeds = [];
+const archiveCanvases = [];
+
+function initArchive() {
+  const grid = document.getElementById('archiveGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  archiveSeeds.length = 0;
+  archiveCanvases.length = 0;
+
+  const base = Date.now();
+  const used = new Set();
+
+  for (let i = 0; i < 8; i++) {
+    let s;
+    do {
+      s = base + Math.floor(Math.random() * 1000000) + i * 97;
+    } while (used.has(s));
+    used.add(s);
+    archiveSeeds.push(s);
+
+    const rendered = renderFieldToOffscreen(s, ARCHIVE_SIZE);
+    archiveCanvases.push(rendered.canvas);
+
+    const item = document.createElement('div');
+    item.className = 'archive-item';
+    item.setAttribute('data-seed', seedLabel(s));
+    item.setAttribute('tabindex', '0');
+    item.setAttribute('role', 'button');
+    item.setAttribute('aria-label', 'Load seed ' + seedLabel(s));
+    const cv = document.createElement('canvas');
+    item.appendChild(cv);
+    item.addEventListener('click', () => loadArchiveSeed(i));
+    item.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        loadArchiveSeed(i);
+      }
+    });
+    grid.appendChild(item);
+  }
+  drawArchive();
+}
+
+function drawArchive() {
+  const grid = document.getElementById('archiveGrid');
+  if (!grid) return;
+  const items = grid.querySelectorAll('.archive-item');
+  items.forEach((item, i) => {
+    const cv = item.querySelector('canvas');
+    if (!cv) return;
+    const rect = item.getBoundingClientRect();
+    const size = Math.max(120, Math.floor(rect.width));
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    cv.width = size * dpr;
+    cv.height = size * dpr;
+    cv.style.width = '100%';
+    cv.style.height = '100%';
+    blitToCanvas(cv, archiveCanvases[i]);
+  });
+}
+
+function loadArchiveSeed(index) {
+  seed = archiveSeeds[index];
+  rng = new RandomGenerator(seed);
+  layoutCanvas();
+  drawCover();
+  drawFramedPlate();
+  drawSurfaces();
+  updateUI();
+  document.getElementById('work').scrollIntoView({ behavior: 'smooth' });
+}
+
+const legalContent = {
+  licensing: {
+    eyebrow: 'Legal · 01',
+    title: 'Licensing',
+    body: `
+      <p>All Socialism of Shapes compositions are <strong>seed-documented</strong> and available for licensing across textile, surface, and apparel applications.</p>
+      <p>Standard licenses cover single-product production runs. For commercial use, custom editions, or exclusive rights, please contact the studio directly to discuss scope and terms.</p>
+      <p>Each license is issued against a specific seed ID. Regeneration of the same seed produces the identical composition — ensuring reproducibility between artist, studio, and manufacturer.</p>
+    `
+  },
+  terms: {
+    eyebrow: 'Legal · 02',
+    title: 'Terms',
+    body: `
+      <p>All artwork, code, and generative systems presented in this catalogue are the <strong>intellectual property of the artist</strong>.</p>
+      <p>Compositions may not be reproduced, redistributed, resold, or adapted without a written license. Seed documentation is provided for traceability and archival purposes only.</p>
+      <p>Usage of this website constitutes acceptance of these terms. For questions regarding permitted use, please reach out via email.</p>
+    `
+  },
+  credits: {
+    eyebrow: 'Legal · 03',
+    title: 'Credits',
+    body: `
+      <p><strong>Design & Generative System</strong><br>Reyhaneh Daneshdoost</p>
+      <p><strong>Typefaces</strong><br>Cormorant Garamond · DM Mono</p>
+      <p><strong>Platform</strong><br>Reyrove Studio</p>
+      <p><strong>Edition</strong><br>Socialism of Shapes — Autumn 2026</p>
+    `
+  }
+};
+
+function initLegalModal() {
+  const modal = document.getElementById('legalModal');
+  const eyebrow = document.getElementById('legalEyebrow');
+  const titleEl = document.getElementById('legalTitle');
+  const bodyEl = document.getElementById('legalBody');
+  if (!modal) return;
+
+  function openLegal(key) {
+    const data = legalContent[key];
+    if (!data) return;
+    eyebrow.textContent = data.eyebrow;
+    titleEl.textContent = data.title;
+    bodyEl.innerHTML = data.body;
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLegal() {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('[data-legal]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      openLegal(link.getAttribute('data-legal'));
+    });
+  });
+
+  modal.querySelectorAll('[data-close]').forEach(el => {
+    el.addEventListener('click', closeLegal);
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && modal.classList.contains('open')) closeLegal();
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.target.matches('input,textarea')) return;
+  const k = e.key.toLowerCase();
+  if (k === 's') { e.preventDefault(); autoDownloadCanvas(); }
+  if (k === 'r') { e.preventDefault(); regenerate(); }
+});
+
+document.getElementById('controlsBar')?.addEventListener('click', regenerate);
+document.getElementById('saveBtn')?.addEventListener('click', autoDownloadCanvas);
+
+window.addEventListener('resize', handleResize);
+window.addEventListener('orientationchange', () => setTimeout(handleResize, 400));
+
 function init() {
-    setup();
-    layoutCanvas();
+  const y = document.getElementById('year');
+  if (y) y.textContent = new Date().getFullYear();
 
-    // Resize handler
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTmr);
-        resizeTmr = setTimeout(layoutCanvas, 100);
-    });
+  seed = Math.floor(Date.now() + Math.random() * 1000000);
+  rng = new RandomGenerator(seed);
 
-    // Keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 's' || e.key === 'S') {
-            e.preventDefault();
-            downloadCanvas();
-        }
-        if (e.key === 'r' || e.key === 'R') {
-            e.preventDefault();
-            regenerate();
-        }
-        if (e.key === 't' || e.key === 'T') {
-            e.preventDefault();
-            toggleShirt();
-        }
-        if (e.key === ' ' || e.key === 'Space') {
-            e.preventDefault();
-            regenerate();
-        }
-    });
+  layoutCanvas();
+  drawCover();
+  initArchive();
+  updateUI();
 
-    // Button handlers
-    document.getElementById('controlsBar').addEventListener('click', regenerate);
-    document.getElementById('controlsBar').addEventListener('touchend', function(e) {
-        e.preventDefault();
-        regenerate();
-    });
-    
-    document.getElementById('shirtToggle').addEventListener('click', toggleShirt);
-    document.getElementById('shirtToggle').addEventListener('touchend', function(e) {
-        e.preventDefault();
-        toggleShirt();
-    });
+  drawFramedPlate();
+  drawSurfaces();
+  initLegalModal();
 }
 
-// Start
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('DOMContentLoaded', init);
 } else {
-    init();
+  init();
 }
 
-// Expose functions globally
 window.regenerate = regenerate;
-window.saveImage = downloadCanvas;
-window.toggleShirt = toggleShirt;
+window.autoDownloadCanvas = autoDownloadCanvas;
+window.drawCanvas = drawCanvas;
+window.layoutCanvas = layoutCanvas;
 </script>
+
 </body>
 </html>
